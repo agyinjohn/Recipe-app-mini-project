@@ -2181,16 +2181,16 @@ List<Recipe> dummyData = [
       "Pepper"
     ],
     steps: [
-      "Heat vegetable oil in a large skillet or wok over medium heat.",
-      "Add diced onion, minced garlic, and grated ginger. Sauté until fragrant.",
-      "Add assorted vegetables to the skillet and stir-fry until tender-crisp.",
-      "Push the vegetables to one side of the skillet and crack the eggs into the empty space.",
-      "Scramble the eggs until cooked, then mix them together with the vegetables.",
-      "Add cooked rice to the skillet and stir-fry everything together, breaking up any clumps of rice.",
-      "Drizzle soy sauce and sesame oil over the fried rice, tossing to coat evenly.",
-      "Season with salt and pepper to taste.",
-      "Garnish with chopped green onions before serving.",
-      "Serve the vegetable fried rice as a delicious and satisfying dinner.",
+      "Heat vegetable oil in a large skillet or wok over medium heat."
+          "Add diced onion, minced garlic, and grated ginger. Sauté until fragrant."
+          "Add assorted vegetables to the skillet and stir-fry until tender-crisp."
+          "Push the vegetables to one side of the skillet and crack the eggs into the empty space."
+          "Scramble the eggs until cooked, then mix them together with the vegetables."
+          "Add cooked rice to the skillet and stir-fry everything together, breaking up any clumps of rice."
+          "Drizzle soy sauce and sesame oil over the fried rice, tossing to coat evenly."
+          "Season with salt and pepper to taste."
+          "Garnish with chopped green onions before serving."
+          "Serve the vegetable fried rice as a delicious and satisfying dinner."
     ],
     type: Type.dinner,
     isGlutenFree: true,

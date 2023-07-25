@@ -177,8 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.white24,
               child: Container(
                 color: Colors.transparent,
-                width: 150,
-                height: 150,
+                width: 50,
+                height: 50,
                 child: const Center(
                   child: LoadingIndicator(
                     indicatorType: Indicator.ballClipRotateMultiple,

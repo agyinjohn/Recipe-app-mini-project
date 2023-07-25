@@ -42,6 +42,195 @@ class _SearchPageState extends State<SearchPage> {
     focusNode.dispose();
   }
 
+  List ingredients = [
+    [
+      'chicken.png',
+      'oil.png',
+      'lemons.png',
+      'salt.png',
+      'turmeric.png',
+      'tomato.png',
+      'garlic.png',
+      'onion.png',
+      'ginger.png'
+    ],
+    [
+      'chicken.png',
+      'cinnamon.png',
+      'oil.png',
+      'garlic.png',
+      'turmeric.png',
+      'ginger.png',
+      'salt.png',
+      'onion.png',
+      'tomato.png'
+    ],
+    [
+      'fish.png',
+      'oil.png',
+      'cinnamon.png',
+      'salt.png',
+      'turmeric.png',
+      'tomato.png',
+      'garlic.png',
+      'onion.png',
+      'ginger.png'
+    ],
+    [
+      'fish.png',
+      'oil.png',
+      'cinnamon.png',
+      'salt.png',
+      'turmeric.png',
+      'tomato.png',
+      'garlic.png',
+      'onion.png',
+      'ginger.png'
+    ],
+    [
+      'milk.png',
+      'flour.png',
+      'sugar.png',
+      'saffron.png',
+      'cashew.png',
+      'lemons.png',
+      'almond.png'
+    ],
+    [
+      'paneer.png',
+      'oil.png',
+      'sugar.png',
+      'capcicum.png',
+      'cashew.png',
+      'onion.png',
+      'tomato.png'
+    ],
+    [
+      'egg.png',
+      'flour.png',
+      'sugar.png',
+      'saffron.png',
+      'capcicum.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'oil.png'
+    ],
+    [
+      'paneer.png',
+      'oil.png',
+      'sugar.png',
+      'saffron.png',
+      'cashew.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'capcicum.png'
+    ],
+    [
+      'tomato.png',
+      'oil.png',
+      'cumin.png',
+      'capcicum.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'cumin.png'
+    ],
+    [
+      'paneer.png',
+      'oil.png',
+      'sugar.png',
+      'saffron.png',
+      'cashew.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'capcicum.png'
+    ],
+    [
+      'milk.png',
+      'flour.png',
+      'sugar.png',
+      'saffron.png',
+      'cashew.png',
+      'lemons.png',
+      'almond.png'
+    ],
+    [
+      'tomato.png',
+      'oil.png',
+      'cumin.png',
+      'capcicum.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'cumin.png'
+    ],
+    [
+      'egg.png',
+      'capcicum.png',
+      'lemons.png',
+      'oil.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'cumin.png'
+    ],
+    [
+      'egg.png',
+      'flour.png',
+      'sugar.png',
+      'saffron.png',
+      'capcicum.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'oil.png'
+    ],
+    [
+      'egg.png',
+      'flour.png',
+      'sugar.png',
+      'saffron.png',
+      'capcicum.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'oil.png'
+    ],
+    [
+      'egg.png',
+      'flour.png',
+      'sugar.png',
+      'saffron.png',
+      'capcicum.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'oil.png'
+    ],
+    [
+      'paneer.png',
+      'oil.png',
+      'sugar.png',
+      'saffron.png',
+      'cashew.png',
+      'onion.png',
+      'tomato.png',
+      'black_pepper.png',
+      'capcicum.png'
+    ],
+    [
+      'capcicum.png',
+      'flour.png',
+      'tomato.png',
+      'oil.png',
+      'black_pepper.png',
+      'lemons.png',
+      'onion.png'
+    ],
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,6 +298,9 @@ class _SearchPageState extends State<SearchPage> {
                             color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.w500),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(5)),
                         enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(5)),
@@ -150,11 +342,12 @@ class _SearchPageState extends State<SearchPage> {
                               context,
                               MaterialPageRoute(builder: (context) {
                                 return ProductDetailScreen(
+                                  isPopular: false,
                                   image: displayList[index].imageUrl,
                                   name: displayList[index].name,
                                   about: displayList[index].description,
-                                  ingredients: displayList[index].ingredients,
-                                  steps: "displayList[index].steps",
+                                  ingredients: ingredients[index],
+                                  steps: displayList[index].steps,
                                 );
                               }),
                             );

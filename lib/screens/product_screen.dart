@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_test/screens/product_details.dart';
@@ -8,7 +10,10 @@ import 'package:recipe_test/utils/user_provider.dart';
 import 'package:recipe_test/screens/search_page.dart';
 
 import '../model/recipe_model.dart';
+import '../model/user_model.dart';
 import '../utils/dummy_data.dart';
+import 'auto_recipe_generation.dart';
+import 'filters_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -329,84 +334,113 @@ class _ProductScreenState extends State<ProductScreen> {
   String imagUrl = '';
   bool isLoading = false;
   List<Recipe> dummy_data = [];
+  List<Recipe> breakfast = [];
+  List<Recipe> lunch = [];
+  List<Recipe> dinner = [];
+  List<Recipe> salad = [];
+  List<Recipe> snacks = [];
+  List<Recipe> tempRecipes = [];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  getIndividualMeals() {
+    setState(() {
+      dummy_data = List.from(dummyData);
+      breakfast =
+          dummyData.where((recipe) => recipe.type == Type.breakfast).toList();
+      lunch = dummyData.where((recipe) => recipe.type == Type.lunch).toList();
+      dinner = dummyData.where((recipe) => recipe.type == Type.dinner).toList();
+      salad = dummyData.where((recipe) => recipe.type == Type.salad).toList();
+      snacks = dummyData.where((recipe) => recipe.type == Type.snacks).toList();
+    });
+  }
+
   getSelectedMeal() {
     if (selectedMeal == 'Breakfast') {
       setState(() {
-        dummy_data =
-            dummyData.where((recipe) => recipe.type == Type.breakfast).toList();
+        breakfast = dummy_data
+            .where((recipe) => recipe.type == Type.breakfast)
+            .toList();
+        tempRecipes = breakfast;
       });
     } else if (selectedMeal == 'Lunch') {
       setState(() {
-        dummy_data =
-            dummyData.where((recipe) => recipe.type == Type.lunch).toList();
+        lunch =
+            dummy_data.where((recipe) => recipe.type == Type.lunch).toList();
+        tempRecipes = lunch;
       });
     } else if (selectedMeal == 'Salad') {
       setState(() {
-        dummy_data =
-            dummyData.where((recipe) => recipe.type == Type.salad).toList();
+        salad =
+            dummy_data.where((recipe) => recipe.type == Type.salad).toList();
+        tempRecipes = List.from(salad);
       });
     } else if (selectedMeal == 'Dinner') {
       setState(() {
-        dummy_data =
-            dummyData.where((recipe) => recipe.type == Type.dinner).toList();
+        dinner =
+            dummy_data.where((recipe) => recipe.type == Type.dinner).toList();
+        tempRecipes = dinner;
       });
     } else if (selectedMeal == 'Snacks') {
       setState(() {
-        dummy_data =
-            dummyData.where((recipe) => recipe.type == Type.snacks).toList();
+        snacks =
+            dummy_data.where((recipe) => recipe.type == Type.snacks).toList();
+
+        tempRecipes = snacks;
       });
     }
   }
-  //  'Popular',
-  // 'Salad',
-  // 'Breakfast',
-  // 'Lunch',
-  // 'Snacks',
-  // 'Dinner'
-  // getDataFromApi({required String text}) async {
-  //   var uri = Uri.https('edamam-food-and-grocery-database.p.rapidapi.com',
-  //       '/api/food-database/v2/parser', {
-  //     'nutrition-type': 'breakfast',
-  //     'category[0]': 'generic-foods',
-  //     'health[0]': 'alcohol-free'
-  //   });
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-  //     final response = await http.get(uri, headers: {
-  //       'X-RapidAPI-Key': '1b7ce6c3b7mshc55c336c0b688b2p198075jsnefa532851b2a',
-  //       'X-RapidAPI-Host': 'edamam-food-and-grocery-database.p.rapidapi.com'
-  //     });
 
-  //     print(json.decode(response.body));
+  Map<String, bool> filters = {
+    'gluten': false,
+    'lactose': false,
+    'vegen': false,
+    'vegetarian': false,
+  };
 
-  //     imagUrl = jsonResponse['hints'][0]['food']['image'];
-  //     setState(() {
-  //       jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     print(e.toString());
-  //   }
-  // }
-  // getImageFromGpt() async {
-  //   for (int i = 0; i < dummyData.length; i++) {
-  //     AIHandler aiHandler = AIHandler();
+  void _setFilters(Map<String, bool> filter) {
+    setState(() {
+      filters = filter;
 
-  //     ImageUrl? imageLink = await aiHandler
-  //         .generateImage('$dummyData[i].name meal with blackbacground');
-  //     print('$imageLink $i ');
-  //   }
-  // }
+      dummy_data = dummyData.where((meal) {
+        if (filters['gluten']! && !meal.isGlutenFree) {
+          return false;
+        }
+        if (filters['lactose']! && !meal.isLactoseFree) {
+          return false;
+        }
+        if (filters['vegen']! && !meal.isVegan) {
+          return false;
+        }
+        if (filters['vegetarian']! && !meal.isGlutenFree) {
+          return false;
+        }
+        return true;
+      }).toList();
+    });
+  }
+
+  getUserData() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await _firebaseFirestore
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .get();
+    if (snapshot.data() != null) {
+      UserModel user = UserModel.fromMap(snapshot.data()!);
+      // ignore: use_build_context_synchronously
+      Provider.of<UserProvider>(context, listen: false).setUserData(user);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    //getImageFromGpt();
+    getIndividualMeals();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getUserData();
   }
 
   @override
@@ -461,9 +495,6 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                   // Profile Image
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, ProfileScreen.routeName);
-                    },
                     child: CircleAvatar(
                       radius: 25,
                       backgroundImage: NetworkImage(user.profilePic),
@@ -496,6 +527,9 @@ class _ProductScreenState extends State<ProductScreen> {
                       child: Container(
                         // width: 140.0,
                         decoration: BoxDecoration(
+                          color: selectedMeal == textSmall[index]
+                              ? Colors.deepOrange
+                              : Colors.black,
                           border: Border.all(color: Colors.white),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -544,18 +578,39 @@ class _ProductScreenState extends State<ProductScreen> {
                   Row(
                     children: [
                       IconButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, SearchPage.routeName);
-                          },
-                          icon: const Icon(
-                            Icons.search,
-                            size: 25,
-                            color: Colors.white,
-                          )),
-                      Image.asset(
-                        'assets/images/filter.png',
-                        height: 35.0,
-                        width: 35.0,
+                        onPressed: () {
+                          Navigator.pushNamed(context, SearchPage.routeName);
+                        },
+                        icon: const Icon(
+                          Icons.search,
+                          size: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, AutoRecipeGenerationScreen.routeName);
+                        },
+                        icon: const Icon(
+                          Icons.api_outlined,
+                          size: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, FilterScreen.routeName,
+                              arguments: {
+                                'setFilters': _setFilters,
+                                'currentFilters': filters,
+                              });
+                        },
+                        child: Image.asset(
+                          'assets/images/filter.png',
+                          height: 35.0,
+                          width: 35.0,
+                        ),
                       ),
                     ],
                   ),
@@ -565,46 +620,39 @@ class _ProductScreenState extends State<ProductScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
-                child:
-                    // selectedMeal != 'Popular' &&
-                    //         (jsonResponse['hints'] as dynamic).length < 1
-                    //     ? const Center(
-                    //         child: Text(
-                    //     https://oaidalleapiprodscus.blob.core.windows.net/private/org-3PqyQYra9LvRBGRfWOtjNN7f/user-OQ7jGQ6LMuEE8JALwQ9A4lMI/img-mcGoSPawHt6ozNHsik1lbVRb.png?st=2023-07-13T08%3A38%3A16Z&se=2023-07-13T10%3A38%3A16Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-07-12T20%3A27%3A22Z&ske=2023-07-13T20%3A27%3A22Z&sks=b&skv=2021-08-06&sig=mFkPbIT2/csWW%2Be6%2BWvm6HDgjR5dEeL4p35XUW26AM0%3D      'Check your internet Connection',
-                    //           style: TextStyle(
-                    //               fontSize: 20,
-                    //               color: Colors.red,
-                    //               fontWeight: FontWeight.bold),
-                    //         ),
-                    //       )
-                    //     :
-                    ListView.separated(
+                child: ListView.separated(
                   shrinkWrap: true,
                   separatorBuilder: (BuildContext context, int index) {
                     return const SizedBox(
                       height: 10,
                     );
                   },
-                  itemCount: selectedMeal != 'Popular'
-                      ? dummy_data.length
-                      : imagesLarge.length,
-                  //: (jsonResponse['hints'] as dynamic).length,
+                  itemCount: selectedMeal == 'Popular'
+                      ? imagesLarge.length
+                      : tempRecipes.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
-                            return isLoading
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : ProductDetailScreen(
+                            return selectedMeal == 'Popular'
+                                ? ProductDetailScreen(
+                                    isPopular: true,
                                     image:
                                         'assets/images/${imagesLarge[index]}',
                                     name: textLarge[index],
                                     about: about[index],
                                     ingredients: ingredients[index],
                                     steps: steps[index],
+                                  )
+                                : ProductDetailScreen(
+                                    isPopular: false,
+                                    image: tempRecipes[index].imageUrl,
+                                    name: tempRecipes[index].name,
+                                    about: tempRecipes[index].description,
+                                    ingredients: ingredients[index],
+                                    steps: tempRecipes[index].steps,
                                   );
                           }),
                         );
@@ -626,7 +674,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       width: 150.0,
                                     )
                                   : CachedNetworkImage(
-                                      imageUrl: dummy_data[index].imageUrl,
+                                      imageUrl: tempRecipes[index].imageUrl,
                                       placeholder: (context, url) => const Icon(
                                         Icons.image,
                                         size: 150,
@@ -669,7 +717,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                     Text(
                                       selectedMeal != 'Popular'
-                                          ? dummy_data[index].name
+                                          ? tempRecipes[index].name
                                           : textLarge[index],
                                       style: const TextStyle(
                                         color: Colors.white,
@@ -683,7 +731,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     Text(
                                       selectedMeal == 'Popular'
                                           ? descriptionText[index]
-                                          : dummy_data[index].description,
+                                          : tempRecipes[index].description,
                                       style: const TextStyle(
                                         color: Colors.blueGrey,
                                         fontSize: 13,

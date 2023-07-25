@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:recipe_test/utils/auth_methods.dart';
 
+import '../utils/user_provider.dart';
 import '../widget/round_button.dart';
 import '../widget/title_subtitle_cell.dart';
 import 'login_screen.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,6 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   AuthMethods authMethods = AuthMethods();
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).getUser;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -58,8 +61,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    child: Image.asset(
-                      "assets/img/u2.png",
+                    child: Image.network(
+                      user.profilePic,
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,
@@ -71,16 +74,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          "Stefani Wong",
-                          style: TextStyle(
+                          user.name,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        Text(
+                        const Text(
                           "Lose a Fat Program",
                           style: TextStyle(
                             color: Colors.grey,

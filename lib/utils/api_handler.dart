@@ -1,28 +1,39 @@
-// import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'dart:convert';
+import 'dart:io';
 
-// class AIHandler {
-//   final openAI = OpenAI.instance.build(
-//     token: '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',
-//     baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 20000)),
-//     isLog: true,
-//   );
+import 'package:http/http.dart' as http;
 
-//   Future<ImageUrl?> generateImage(String prompt) async {
-//     try {
-//       final request = GenerateImage(prompt, 1, size: ImageSize.size1024);
-//       final response = await openAI.generateImage(request);
-//       final imageDataList = response?.data;
-//       final imageData = imageDataList?.last;
-//       return imageData?.url;
-//     } catch (e) {
+Future<String> getPostResultFromApi({required String message}) async {
+  var url = 'https://chatgpt-api8.p.rapidapi.com/';
+  var headers = {
+    'content-type': 'application/json',
+    'X-RapidAPI-Key': '1b7ce6c3b7mshc55c336c0b688b2p198075jsnefa532851b2a',
+    'X-RapidAPI-Host': 'chatgpt-api8.p.rapidapi.com',
+  };
+  var data = [
+    {
+      'content': 'Create a recipe from these ingredients \n $message',
+      'role': 'user'
+    }
+  ];
+  String responsed = '';
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: json.encode(data),
+    );
 
-//     }
-//     return null;
-//   }
-
-//   void dispose() {
-//     openAI.cancelAIGenerate();
-//   }
-// }
-
-// typedef ImageUrl = String;
+    Map jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResponse['error'] != null) {
+      // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
+      throw HttpException(jsonResponse['error']["message"]);
+    }
+    if (jsonResponse.isNotEmpty) {
+      responsed = jsonResponse['text'];
+    }
+  } catch (e) {
+    print(e);
+  }
+  return responsed;
+}

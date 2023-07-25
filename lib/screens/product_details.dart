@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class ProductDetailScreen extends StatefulWidget {
   final String name;
   final String about;
   final List ingredients;
-  final String steps;
+  final dynamic steps;
   final bool isPopular;
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -48,13 +49,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 height: 20.0,
               ),
               ClipRRect(
-                  borderRadius: BorderRadius.circular(100.0),
-                  child: Image.asset(
-                    widget.image,
-                    height: 300,
-                    width: 300,
-                    fit: BoxFit.fill,
-                  )),
+                borderRadius: BorderRadius.circular(100.0),
+                child: widget.isPopular
+                    ? Image.asset(
+                        widget.image,
+                        height: 300,
+                        width: 300,
+                        fit: BoxFit.fill,
+                      )
+                    : CachedNetworkImage(
+                        placeholder: (context, url) => const Icon(
+                          Icons.image,
+                          color: Colors.blue,
+                          size: 150,
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Center(child: CircularProgressIndicator()),
+                        imageUrl: widget.image,
+                        height: 300,
+                        width: 300,
+                        fit: BoxFit.fill,
+                      ),
+              ),
               const SizedBox(
                 height: 10.0,
               ),
@@ -315,12 +331,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        widget.steps,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 14),
-                        textAlign: TextAlign.justify,
-                      ),
+                      widget.isPopular
+                          ? Text(
+                              widget.steps,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 14),
+                              textAlign: TextAlign.justify,
+                            )
+                          : SingleChildScrollView(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ...widget.steps
+                                        .map((step) => Text('- $step',
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                            textAlign: TextAlign.justify))
+                                        .toList(),
+                                  ]),
+                            )
+                      // : const Text(
+                      //     'null',
+                      //     style: TextStyle(color: Colors.white),
+                      //   ),
+                      // : Expanded(
+                      //     child: ListView.builder(
+                      //       shrinkWrap: true,
+                      //       itemCount: widget.steps.length,
+                      //       itemBuilder: (context, index) => ListTile(
+                      //         tileColor: Colors.black,
+                      //         leading: Text(
+                      //           index as String,
+                      //           style: const TextStyle(
+                      //               fontSize: 18,
+                      //               color: Color.fromARGB(255, 97, 92, 92)),
+                      //         ),
+                      //         title: Text(
+                      //           widget.steps[index],
+                      //           style: const TextStyle(
+                      //               fontSize: 25, color: Colors.white),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
                     ],
                   ),
                 ),

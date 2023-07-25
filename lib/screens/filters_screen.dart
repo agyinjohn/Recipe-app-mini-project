@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
-class Filters extends StatefulWidget {
-  static const argName = '/filters';
+class FilterScreen extends StatefulWidget {
+  static const routeName = '/FilterScreen';
 
-  final Function setFilters;
-  final Map<String, bool> currentFilters;
-  // ignore: use_key_in_widget_constructors
-  const Filters({required this.currentFilters, required this.setFilters});
+  final Function setFilter;
+  final Map<String, bool> currentFilter;
+
+  const FilterScreen(
+      {super.key, required this.currentFilter, required this.setFilter});
   @override
-  State<Filters> createState() => _FiltersState();
+  State<FilterScreen> createState() => _FilterScreenState();
 }
 
-class _FiltersState extends State<Filters> {
+class _FilterScreenState extends State<FilterScreen> {
   var gluttenFree = false;
 
   var lactoseFree = false;
@@ -22,19 +23,26 @@ class _FiltersState extends State<Filters> {
 
   @override
   void initState() {
-    gluttenFree = widget.currentFilters['gluten'] as bool;
-    lactoseFree = widget.currentFilters['lactose'] as bool;
-    vegan = widget.currentFilters['vegen'] as bool;
-    vegetarian = widget.currentFilters['vegetarian'] as bool;
+    gluttenFree = widget.currentFilter['gluten']!;
+    lactoseFree = widget.currentFilter['lactose']!;
+    vegan = widget.currentFilter['vegen']!;
+    vegetarian = widget.currentFilter['vegetarian']!;
     super.initState();
   }
 
   Widget _buidSwitchTile(
       String title, bool isOn, String description, changeValue) {
     return SwitchListTile.adaptive(
+      tileColor: const Color(0xff18181A),
       value: isOn,
-      title: Text(title),
-      subtitle: Text(description),
+      title: Text(
+        title,
+        style: const TextStyle(color: Colors.white),
+      ),
+      subtitle: Text(
+        description,
+        style: const TextStyle(color: Colors.blueGrey),
+      ),
       onChanged: changeValue,
     );
   }
@@ -42,8 +50,13 @@ class _FiltersState extends State<Filters> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.black,
         appBar: AppBar(
-          title: const Text('Filters'),
+          backgroundColor: Colors.black,
+          title: const Text(
+            'FilterScreen',
+            style: TextStyle(color: Colors.white),
+          ),
           actions: [
             IconButton(
               onPressed: (() {
@@ -54,7 +67,7 @@ class _FiltersState extends State<Filters> {
                   'vegetarian': vegetarian,
                 };
 
-                widget.setFilters(selecteState);
+                widget.setFilter(selecteState);
               }),
               icon: const Icon(Icons.save),
             )
@@ -62,35 +75,46 @@ class _FiltersState extends State<Filters> {
         ),
         body: Column(
           children: [
-            Container(
-              color: Colors.white,
-              margin: const EdgeInsets.all(10),
-              child: const Text('Add filters to the meals'),
+            const Text(
+              'Add Filters to the meals',
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(
+              height: 15,
             ),
             Expanded(
               child: ListView(
                 children: [
                   _buidSwitchTile('Glutten Free food  ', gluttenFree,
-                      'include on  Glutten free food', (newValue) {
+                      'include Glutten free food', (newValue) {
                     setState(() {
                       gluttenFree = newValue;
                     });
                   }),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   _buidSwitchTile('LactoseFree Free food  ', lactoseFree,
-                      'include only Lactose free food', (newValue) {
+                      'include Lactose free food', (newValue) {
                     setState(() {
                       lactoseFree = newValue;
                     });
                   }),
-                  _buidSwitchTile(
-                      'Vegan  food', vegan, 'include only Vegan  foods',
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  _buidSwitchTile('Vegan  food', vegan, 'Include Vegan  foods',
                       (newValue) {
                     setState(() {
                       vegan = newValue;
                     });
                   }),
-                  _buidSwitchTile('Vegatable  food', vegetarian,
-                      'include vegable only foods', (newValue) {
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  _buidSwitchTile(
+                      'Vegatable  food', vegetarian, 'include vegable foods',
+                      (newValue) {
                     setState(() {
                       vegetarian = newValue;
                     });

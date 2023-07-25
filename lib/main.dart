@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_test/firebase_options.dart';
 import 'package:recipe_test/model/user_model.dart';
@@ -13,7 +14,9 @@ import 'package:recipe_test/widget/loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
@@ -37,6 +40,7 @@ void main() async {
       child: const MyApp(),
     ),
   );
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
@@ -53,7 +57,12 @@ class MyApp extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingIndicator();
           }
-
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Center(child: Text('Please an error occured'));
+          }
+          if (snapshot.hasError) {
+            return const Center(child: Text('Please an error occured'));
+          }
           if (snapshot.hasData) {
             getUserData(context);
             return const ProductScreen();
