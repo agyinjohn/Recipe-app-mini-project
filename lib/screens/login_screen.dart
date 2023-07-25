@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:recipe_test/commons/utils.dart';
-import 'package:recipe_test/product_screen.dart';
-import 'package:recipe_test/sign_up.dart';
-
+import 'package:recipe_test/screens/product_screen.dart';
+import 'package:recipe_test/screens/sign_up.dart';
 import 'package:recipe_test/widget/custom_textfield.dart';
-
-import 'utils/auth_methods.dart';
-import 'widget/custom_button.dart';
-import 'package:lottie/lottie.dart';
+import '../utils/auth_methods.dart';
+import '../widget/custom_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,30 +33,28 @@ class _LoginScreenState extends State<LoginScreen> {
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
         if (!result) {
-             setState(() {
-          isLoading = false;
-        });
+          setState(() {
+            isLoading = false;
+          });
           return;
         } else {
-             setState(() {
-          isLoading = false;
-        });
+          setState(() {
+            isLoading = false;
+          });
           // ignore: use_build_context_synchronously
           Navigator.pushReplacementNamed(context, ProductScreen.routeName);
         }
-          setState(() {
+        setState(() {
           isLoading = false;
         });
       } catch (e) {
-         setState(() {
+        setState(() {
           isLoading = false;
         });
         debugPrint(e.toString());
       }
     } else {
-       
-        Get.snackbar('An error Occured', 'Please fill out all field');
-      
+      Get.snackbar('An error Occured', 'Please fill out all field');
     }
   }
 
@@ -70,10 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          
-          Column(
+      body: Stack(children: [
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
@@ -94,12 +85,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 150,
                   fit: BoxFit.fill,
                 )),
-            
+
             const SizedBox(
               height: 10,
             ),
-           const Text('Welcome, Sign In', style: TextStyle(fontSize: 30, color: Colors.grey),),
-             const SizedBox(
+            const Text(
+              'Welcome, Sign In',
+              style: TextStyle(fontSize: 30, color: Colors.grey),
+            ),
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -130,10 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 35).copyWith(top: 25),
-              child: CustomButton(text: 'Sign In', onTap:(){
-                FocusScope.of(context).unfocus();
-                loginUser();
-                } ),
+              child: CustomButton(
+                  text: 'Sign In',
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    loginUser();
+                  }),
             ),
             const SizedBox(
               height: 10,
@@ -173,23 +169,25 @@ class _LoginScreenState extends State<LoginScreen> {
             )
           ],
         ),
-        if(isLoading)
-        Center(child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: Colors.white24,
-          child: Container(
-            color: Colors.transparent,
-            width: 150,
-            height: 150,
-            child: const Center(child: LoadingIndicator(
-              indicatorType: Indicator.ballClipRotateMultiple,
-            ),),
+        if (isLoading)
+          Center(
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Colors.white24,
+              child: Container(
+                color: Colors.transparent,
+                width: 150,
+                height: 150,
+                child: const Center(
+                  child: LoadingIndicator(
+                    indicatorType: Indicator.ballClipRotateMultiple,
+                  ),
+                ),
+              ),
             ),
-            ),
-            ),
-        ]
-      ),
+          ),
+      ]),
     );
   }
 }

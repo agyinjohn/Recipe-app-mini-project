@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:recipe_test/product_screen.dart';
+
+import 'package:recipe_test/screens/product_screen.dart';
 
 import '../model/recipe_model.dart';
-import '../product_details.dart';
+import 'product_details.dart';
 import '../utils/dummy_data.dart';
 
 class SearchPage extends StatefulWidget {

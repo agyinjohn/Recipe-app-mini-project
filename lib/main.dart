@@ -3,10 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_test/firebase_options.dart';
-import 'package:recipe_test/home_screen.dart';
 import 'package:recipe_test/model/user_model.dart';
-import 'package:recipe_test/product_screen.dart';
-import 'package:recipe_test/route.dart';
+import 'package:recipe_test/utils/route.dart';
+import 'package:recipe_test/screens/home_screen.dart';
+import 'package:recipe_test/screens/product_screen.dart';
 import 'package:recipe_test/utils/user_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:recipe_test/widget/loader.dart';
@@ -17,16 +17,17 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
-     apiKey: 'AIzaSyCxWa7EaZroLELQSj1HoMuaHmPcsrcsSms',
-    appId: '1:264341710340:web:d0113162f7b7ff37f4b751',
-    messagingSenderId: '264341710340',
-    projectId: 'recipe-test-5a543',
-    authDomain: 'recipe-test-5a543.firebaseapp.com',
-    storageBucket: 'recipe-test-5a543.appspot.com',
+      apiKey: 'AIzaSyCxWa7EaZroLELQSj1HoMuaHmPcsrcsSms',
+      appId: '1:264341710340:web:d0113162f7b7ff37f4b751',
+      messagingSenderId: '264341710340',
+      projectId: 'recipe-test-5a543',
+      authDomain: 'recipe-test-5a543.firebaseapp.com',
+      storageBucket: 'recipe-test-5a543.appspot.com',
     ));
-  }else {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  } 
+  } else {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+  }
 
   runApp(
     MultiProvider(
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: "Poppins"),
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -71,6 +73,6 @@ class MyApp extends StatelessWidget {
         .get();
     UserModel userSnap = UserModel.fromMap(user.data()!);
     // ignore: use_build_context_synchronously
-    Provider.of<UserProvider>(context).setUserData(userSnap);
+    Provider.of<UserProvider>(context, listen: false).setUserData(userSnap);
   }
 }

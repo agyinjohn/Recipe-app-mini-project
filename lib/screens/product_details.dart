@@ -305,7 +305,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Text(
+                      const Text(
                         'Steps',
                         style: TextStyle(
                             fontSize: 20.0,
@@ -317,7 +317,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                       Text(
                         widget.steps,
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 14),
                         textAlign: TextAlign.justify,
                       ),
                     ],

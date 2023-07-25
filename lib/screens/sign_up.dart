@@ -4,8 +4,8 @@ import 'package:recipe_test/commons/utils.dart';
 import 'package:recipe_test/utils/auth_methods.dart';
 import 'package:recipe_test/widget/custom_textfield.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import '../widget/custom_button.dart';
 import 'login_screen.dart';
-import 'widget/custom_button.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,7 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isLoading = false;
   FocusNode focusNode1 = FocusNode();
   FocusNode focusNode2 = FocusNode();
-    FocusNode focusNode3 = FocusNode();
+  FocusNode focusNode3 = FocusNode();
 
   pickeProfilePic() async {
     Uint8List? pickedImage = await pickImageFromGallery();
@@ -88,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Stack(children: [
         Center(
           child: Column(
-            mainAxisAlignment:MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(
                 height: 50,
@@ -170,8 +170,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 15,
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 35).copyWith(top: 25),
+                padding: const EdgeInsets.symmetric(horizontal: 35)
+                    .copyWith(top: 25),
                 child: CustomButton(text: 'Sign Up', onTap: signUserUp),
               ),
               const SizedBox(
@@ -203,14 +203,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: double.infinity,
               width: double.infinity,
               decoration: const BoxDecoration(color: Colors.white12),
-              child:  Center(
-                child:Container(
+              child: Center(
+                child: Container(
                   color: Colors.transparent,
                   height: 200,
                   width: 200,
                   child: const LoadingIndicator(
-                
-                      indicatorType: Indicator.ballClipRotateMultiple,
+                    indicatorType: Indicator.ballClipRotateMultiple,
                   ),
                 ),
               ),

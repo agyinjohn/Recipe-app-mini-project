@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:recipe_test/product_details.dart';
+import 'package:recipe_test/screens/product_details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:recipe_test/screens/profile_screen.dart';
 import 'package:recipe_test/utils/user_provider.dart';
-import 'package:recipe_test/widget/profile_screen.dart';
-import 'package:recipe_test/widget/search_page.dart';
 
-import 'model/recipe_model.dart';
-import 'utils/dummy_data.dart';
+import 'package:recipe_test/screens/search_page.dart';
+
+import '../model/recipe_model.dart';
+import '../utils/dummy_data.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -410,7 +411,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).getUser;
+    final user = Provider.of<UserProvider>(context, listen: false).getUser;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
